@@ -11,12 +11,12 @@ type Student struct {
 
 func main() {
 	students := []Student{
-		{"jamie", 67, 88, 90},
-		{"michael", 77, 77, 90},
+		{"amir", 67, 88, 90},
+		{"imran", 77, 77, 90},
 		{"aziz", 100, 65, 88},
 		{"jamal", 50, 80, 75},
-		{"eric", 70, 80, 65},
-		{"john", 80, 76, 68},
+		{"hasan", 70, 80, 65},
+		{"jafar", 80, 76, 68},
 	}
 
 	getInfo(students)
