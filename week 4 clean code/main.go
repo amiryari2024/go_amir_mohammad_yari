@@ -1,64 +1,65 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
+// User struct represents a user with an email and password
 type User struct {
 	Email    string
 	Password string
 }
 
-type UserRepo struct {
-	DB []User
+// UserRepository struct represents a repository of users
+type UserRepository struct {
+	database []User
 }
 
-// Register adds a new user to the repository.
-// Returns an error if the registration fails due to invalid input.
-func (r *UserRepo) Register(u User) error {
+// Register adds a new user to the repository
+func (r *UserRepository) Register(u User) error {
 	if u.Email == "" || u.Password == "" {
-		// Return an error instead of printing to console
-		return errors.New("registration failed: email and password must not be empty")
+		return fmt.Errorf("Register failed: Email or Password cannot be empty")
 	}
 
-	// Append the user to the repository
-	r.DB = append(r.DB, u)
+	// Here you would hash the password before storing it
+	r.database = append(r.database, u)
+	fmt.Println("User registered successfully")
 	return nil
 }
 
-// Login checks if the user credentials are valid.
-// Returns an authentication token if successful, or an empty string otherwise.
-func (r *UserRepo) Login(u User) (string, error) {
+// Login checks user credentials and returns an auth token if successful
+func (r *UserRepository) Login(u User) (string, error) {
 	if u.Email == "" || u.Password == "" {
-		// Return an error instead of printing to console
-		return "", errors.New("login failed: email and password must not be empty")
+		return "", fmt.Errorf("Login failed: Email or Password cannot be empty")
 	}
 
-	for _, user := range r.DB {
+	// Here you would hash the provided password and compare it with the stored hash
+	for _, user := range r.database {
 		if user.Email == u.Email && user.Password == u.Password {
+			// Generate and return a unique auth token in a real application
 			return "auth token", nil
 		}
 	}
 
-	return "", errors.New("login failed: invalid email or password")
+	return "", fmt.Errorf("Login failed: Invalid email or password")
 }
 
 func main() {
-	repo := UserRepo{}
+	// Example usage
+	repo := &UserRepository{}
 
-	user := User{Email: "example@example.com", Password: "password123"}
-
-	// Example usage of Register method
-	if err := repo.Register(user); err != nil {
-		fmt.Println(err)
-	}
-
-	// Example usage of Login method
-	token, err := repo.Login(user)
+	// Register a new user
+	err := repo.Register(User{Email: "user@example.com", Password: "password123"})
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println("Login successful, token:", token)
+		return
 	}
+
+	// Attempt to log in
+	token, err := repo.Login(User{Email: "user@example.com", Password: "password123"})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Login successful, token:", token)
 }
